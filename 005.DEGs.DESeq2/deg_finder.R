@@ -63,7 +63,7 @@ threshold = 10
 effect_size_threshold = log2(2)
 
 #
-# 3.1. contrast KO vs WT
+# 3.1. contrast WT vs KO
 #
 rule = (metadata$condition == 'KO') | (metadata$condition == 'WT')
 working_metadata = metadata[rule, ]
@@ -73,7 +73,7 @@ View(working_metadata)
 txi = tximport(working_metadata$path, type="kallisto", tx2gene=t2g, ignoreTxVersion=TRUE)
 
 dds = DESeqDataSetFromTximport(txi, colData=working_metadata, design=~condition) 
-dds$time = relevel(dds$condition, ref="WT")
+dds$time = relevel(dds$condition, ref="KO")
 
 keep = rowMaxs(counts(dds)) >= threshold
 dds = dds[keep, ]
@@ -84,20 +84,20 @@ res = results(dds, parallel=TRUE, alpha=0.05)
 filtred_results = res[which(res$padj < 0.05 & abs(res$log2FoldChange) > effect_size_threshold), ]
 sorted_filtred_results = filtred_results[order(filtred_results[["padj"]]),]
 anti_results = res[which(res$padj > 0.05 | abs(res$log2FoldChange) < effect_size_threshold), ]
-cat(blue(paste('contrast KO vs WT:', dim(filtred_results)[1], sep=' ')), fill=TRUE)
+cat(blue(paste('contrast WT vs KO:', dim(filtred_results)[1], sep=' ')), fill=TRUE)
 write.table(sorted_filtred_results, 
-            file=paste(results_dir, '/effect_KO_vs_WT.tsv', sep=''), quote=FALSE, sep='\t')
+            file=paste(results_dir, '/effect_WT_vs_KO.tsv', sep=''), quote=FALSE, sep='\t')
 write.table(anti_results, 
             file=paste(results_dir, 
-                       '/effect_KO_vs_WT.anti.tsv', sep=''), quote=FALSE, sep='\t')
+                       '/effect_WT_vs_KO.anti.tsv', sep=''), quote=FALSE, sep='\t')
 
-plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect KO vs WT')
-ggsave(file.path(results_dir, 'effect_KO_vs_WT.png'))
+plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect WT vs KO')
+#ggsave(file.path(results_dir, 'effect_WT_vs_KO.png'))
 
 #
-# 3.2. contrasts high vs WT
+# 3.2. contrasts high vs KO
 #
-rule = (metadata$condition == '202high') | (metadata$condition == 'WT')
+rule = (metadata$condition == '202high') | (metadata$condition == 'KO')
 working_metadata = metadata[rule, ]
 dim(working_metadata)
 View(working_metadata)
@@ -105,7 +105,7 @@ View(working_metadata)
 txi = tximport(working_metadata$path, type="kallisto", tx2gene=t2g, ignoreTxVersion=TRUE)
 
 dds = DESeqDataSetFromTximport(txi, colData=working_metadata, design=~condition) 
-dds$time = relevel(dds$condition, ref="WT")
+dds$time = relevel(dds$condition, ref="KO")
 
 keep = rowMaxs(counts(dds)) >= threshold
 dds = dds[keep, ]
@@ -116,20 +116,20 @@ res = results(dds, parallel=TRUE, alpha=0.05)
 filtred_results = res[which(res$padj < 0.05 & abs(res$log2FoldChange) > effect_size_threshold), ]
 sorted_filtred_results = filtred_results[order(filtred_results[["padj"]]),]
 anti_results = res[which(res$padj > 0.05 | abs(res$log2FoldChange) < effect_size_threshold), ]
-cat(blue(paste('contrast 202high vs WT:', dim(filtred_results)[1], sep=' ')), fill=TRUE)
+cat(blue(paste('contrast 202high vs KO:', dim(filtred_results)[1], sep=' ')), fill=TRUE)
 write.table(sorted_filtred_results, 
-            file=paste(results_dir, '/effect_202high_vs_WT.tsv', sep=''), quote=FALSE, sep='\t')
+            file=paste(results_dir, '/effect_202high_vs_KO.tsv', sep=''), quote=FALSE, sep='\t')
 write.table(anti_results, 
             file=paste(results_dir, 
-                       '/effect_202high_vs_WT.anti.tsv', sep=''), quote=FALSE, sep='\t')
+                       '/effect_202high_vs_KO.anti.tsv', sep=''), quote=FALSE, sep='\t')
 
-plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect 202high vs WT')
-ggsave(file.path(results_dir, 'effect_202high_vs_WT.png'))
+plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect 202high vs KO')
+#ggsave(file.path(results_dir, 'effect_202high_vs_WT.png'))
 
 #
-# 3.3. contrasts low vs WT
+# 3.3. contrasts low vs KO
 #
-rule = (metadata$condition == '202low') | (metadata$condition == 'WT')
+rule = (metadata$condition == '202low') | (metadata$condition == 'KO')
 working_metadata = metadata[rule, ]
 dim(working_metadata)
 View(working_metadata)
@@ -137,7 +137,7 @@ View(working_metadata)
 txi = tximport(working_metadata$path, type="kallisto", tx2gene=t2g, ignoreTxVersion=TRUE)
 
 dds = DESeqDataSetFromTximport(txi, colData=working_metadata, design=~condition) 
-dds$time = relevel(dds$condition, ref="WT")
+dds$time = relevel(dds$condition, ref="KO")
 
 keep = rowMaxs(counts(dds)) >= threshold
 dds = dds[keep, ]
@@ -148,15 +148,15 @@ res = results(dds, parallel=TRUE, alpha=0.05)
 filtred_results = res[which(res$padj < 0.05 & abs(res$log2FoldChange) > effect_size_threshold), ]
 sorted_filtred_results = filtred_results[order(filtred_results[["padj"]]),]
 anti_results = res[which(res$padj > 0.05 | abs(res$log2FoldChange) < effect_size_threshold), ]
-cat(blue(paste('contrast 202low vs WT:', dim(filtred_results)[1], sep=' ')), fill=TRUE)
+cat(blue(paste('contrast 202low vs KO:', dim(filtred_results)[1], sep=' ')), fill=TRUE)
 write.table(sorted_filtred_results, 
-            file=paste(results_dir, '/effect_202low_vs_WT.tsv', sep=''), quote=FALSE, sep='\t')
+            file=paste(results_dir, '/effect_202low_vs_KO.tsv', sep=''), quote=FALSE, sep='\t')
 write.table(anti_results, 
             file=paste(results_dir, 
-                       '/effect_202low_vs_WT.anti.tsv', sep=''), quote=FALSE, sep='\t')
+                       '/effect_202low_vs_KO.anti.tsv', sep=''), quote=FALSE, sep='\t')
 
-plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect 202low vs WT')
-ggsave(file.path(results_dir, 'effect_202low_vs_WT.png'))
+plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect 202low vs KO')
+#ggsave(file.path(results_dir, 'effect_202low_vs_KO.png'))
 
 #
 # 3.3. contrasts high vs low
@@ -188,5 +188,5 @@ write.table(anti_results,
                        '/effect_202high_vs_202low.anti.tsv', sep=''), quote=FALSE, sep='\t')
 
 plotPCA(rlog(dds), intgroup=c('condition')) + ggtitle('effect high vs low')
-ggsave(file.path(results_dir, 'effect_202high_vs_202low.png'))
+#ggsave(file.path(results_dir, 'effect_202high_vs_202low.png'))
 
